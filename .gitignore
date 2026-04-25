@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+client_downloads/
+server_storage/
+test_artifacts/
+{core,server,client,simulation,tests}/
