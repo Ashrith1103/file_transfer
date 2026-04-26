@@ -1,5 +1,3 @@
-"""Unit tests for core protocol primitives (no sockets needed)."""
-
 from __future__ import annotations
 
 import unittest
@@ -15,7 +13,7 @@ class TestSplitBytes(unittest.TestCase):
     def test_splits_into_correct_chunk_count(self) -> None:
         data = b"x" * 10
         chunks = split_bytes(data, chunk_size=3)
-        self.assertEqual(4, len(chunks))  # 3+3+3+1
+        self.assertEqual(4, len(chunks))
 
     def test_sequence_numbers_are_monotonic(self) -> None:
         chunks = split_bytes(b"hello world", chunk_size=2)
@@ -49,7 +47,7 @@ class TestSplitBytes(unittest.TestCase):
 
 class TestChecksum(unittest.TestCase):
     def test_sha256_bytes_known_value(self) -> None:
-        # echo -n "" | sha256sum → e3b0c44298fc1c149afb...
+
         self.assertTrue(sha256_bytes(b"").startswith("e3b0c4"))
 
     def test_sha256_bytes_consistency(self) -> None:

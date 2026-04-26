@@ -1,5 +1,3 @@
-"""Integration tests for single-client file transfer."""
-
 from __future__ import annotations
 
 import os
@@ -78,7 +76,7 @@ class TestSingleClientTransfer(unittest.TestCase):
 
     def test_exact_chunk_boundary(self) -> None:
         src = self.tmp / "exact.bin"
-        src.write_bytes(os.urandom(256))  # chunk_size == 256 in setUp
+        src.write_bytes(os.urandom(256))
         out = self._client().transfer(src)
         self.assertEqual(src.read_bytes(), out.read_bytes())
 
@@ -89,7 +87,7 @@ class TestSingleClientTransfer(unittest.TestCase):
         self.assertEqual(sha256_file(src), sha256_file(out))
 
     def test_clean_server_no_retransmit(self) -> None:
-        """max_retries=0 must succeed when there are no drops or corruption."""
+
         clean = _make_server(self.tmp, drop=0.0, corrupt=0.0)
         t = _start(clean)
         try:

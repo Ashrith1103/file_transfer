@@ -1,9 +1,9 @@
-"""Manual multi-file transfer demo.
+\
+\
+\
+\
+\
 
-Creates several different files, starts one TCP server, sends all files through
-separate clients at the same time, and verifies every received file by SHA-256.
-Run with: python multi_file_test.py
-"""
 
 from __future__ import annotations
 

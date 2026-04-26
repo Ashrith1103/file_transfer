@@ -1,18 +1,18 @@
-"""Custom exceptions for the file transfer project."""
-
 from __future__ import annotations
 
 
 class FileTransferError(RuntimeError):
-    """Base class for all project-level errors."""
+    pass
+
 
 
 class ProtocolError(FileTransferError):
-    """Raised when the peer sends malformed or unexpected protocol data."""
+    pass
+
 
 
 class ChecksumMismatchError(FileTransferError):
-    """Raised when a computed checksum does not match the expected value."""
+
 
     def __init__(self, expected: str, actual: str, context: str = "") -> None:
         label = f" ({context})" if context else ""
@@ -22,7 +22,7 @@ class ChecksumMismatchError(FileTransferError):
 
 
 class RetransmitLimitError(FileTransferError):
-    """Raised when the client exhausts all retransmission attempts."""
+
 
     def __init__(self, max_retries: int, missing: int) -> None:
         super().__init__(

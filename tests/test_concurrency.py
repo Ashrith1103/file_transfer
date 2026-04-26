@@ -1,5 +1,3 @@
-"""Concurrency tests: multiple simultaneous clients, session isolation."""
-
 from __future__ import annotations
 
 import os
@@ -54,7 +52,7 @@ class TestConcurrency(unittest.TestCase):
         )
 
     def test_five_concurrent_clients_isolated(self) -> None:
-        """Five clients running simultaneously must each get their own file back intact."""
+
         sources = []
         for i in range(5):
             p = self.tmp / f"client_{i}.dat"
@@ -86,7 +84,7 @@ class TestConcurrency(unittest.TestCase):
             self.assertEqual(sha256_file(src), sha256_file(out), f"mismatch for {src.name}")
 
     def test_ten_concurrent_clients(self) -> None:
-        """Stress test: ten clients, small files, verify all complete successfully."""
+
         sources = [self.tmp / f"stress_{i}.bin" for i in range(10)]
         for p in sources:
             p.write_bytes(os.urandom(512))

@@ -1,5 +1,3 @@
-"""Upload, receive, verify — the client side of the file transfer protocol."""
-
 from __future__ import annotations
 
 import socket
@@ -23,19 +21,19 @@ RETRANSMIT_BATCH_SIZE = 1000
 
 
 class FileTransferClient:
-    """Connect to a :class:`~server.server.FileTransferServer` and transfer a file.
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
 
-    Parameters
-    ----------
-    host:
-        Server hostname or IP address.
-    port:
-        Server TCP port.
-    max_retries:
-        Maximum number of RETRANSMIT rounds before giving up.
-    output_dir:
-        Directory where the received file is written.
-    """
 
     def __init__(
         self,
@@ -50,27 +48,27 @@ class FileTransferClient:
         self.output_dir = output_dir
 
     def transfer(self, source: Path) -> Path:
-        """Upload *source*, receive it back in verified chunks, and write it to disk.
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
 
-        Returns
-        -------
-        Path
-            The path of the successfully written output file.
-
-        Raises
-        ------
-        ChecksumMismatchError
-            If the assembled file's checksum doesn't match the server's.
-        RetransmitLimitError
-            If chunks are still missing after *max_retries* rounds.
-        ProtocolError
-            On any framing or protocol violation.
-        """
         data = source.read_bytes()
 
         with socket.create_connection((self.host, self.port), timeout=CLIENT_CONNECT_TIMEOUT) as sock:
-            # Apply a per-read timeout for the rest of the session so a stalled
-            # or crashed server doesn't block the client indefinitely.
+
+
             sock.settimeout(CLIENT_SOCKET_TIMEOUT)
 
             send_message(
@@ -118,7 +116,7 @@ class FileTransferClient:
             send_message(sock, {"type": "DONE", "checksum": actual_checksum})
             return output_path
 
-    # ── Internal ──────────────────────────────────────────────────────────────
+
 
     def _receive_batch(
         self,
@@ -127,13 +125,13 @@ class FileTransferClient:
         total_chunks: int,
         received: dict[int, bytes],
     ) -> list[int]:
-        """Read CHUNK messages until END_BATCH.
+\
+\
+\
+\
+\
+\
 
-        Chunks whose per-chunk digest doesn't match are discarded so they will
-        appear in the next RETRANSMIT request.
-
-        Returns a sorted list of sequence numbers still missing after this batch.
-        """
         while True:
             header, payload = receive_message(sock)
             raise_if_error(header)
@@ -149,12 +147,12 @@ class FileTransferClient:
 
             seq = int(header["seq"])
             if not (0 <= seq < total_chunks):
-                continue  # ignore out-of-range sequence numbers
+                continue
 
             if sha256_bytes(payload) == str(header["checksum"]):
                 received[seq] = payload
             else:
-                # Corrupted chunk — discard and let it be retransmitted.
+
                 received.pop(seq, None)
 
     def _request_retransmits(
@@ -165,7 +163,7 @@ class FileTransferClient:
         received: dict[int, bytes],
         missing: list[int],
     ) -> list[int]:
-        """Request missing chunks in bounded batches."""
+
         for start in range(0, len(missing), RETRANSMIT_BATCH_SIZE):
             batch = missing[start : start + RETRANSMIT_BATCH_SIZE]
             send_message(sock, {"type": "RETRANSMIT", "seqs": batch})

@@ -1,9 +1,9 @@
-"""Per-client session handler.
+\
+\
+\
+\
+\
 
-Each accepted TCP connection gets its own :class:`ClientSession` instance,
-running inside a dedicated daemon thread.  Sessions are fully isolated: they
-share no mutable state, so an error in one session cannot affect another.
-"""
 
 from __future__ import annotations
 
@@ -29,7 +29,7 @@ if TYPE_CHECKING:
 
 
 class ClientSession:
-    """Handle the full upload → chunk → retransmit → done lifecycle for one client."""
+
 
     def __init__(
         self,
@@ -44,11 +44,11 @@ class ClientSession:
         self.client_id = uuid.uuid4().hex[:12]
 
     def run(self) -> None:
-        """Entry point called from the server's thread pool.
+\
+\
+\
+\
 
-        All exceptions are caught, logged to stdout, and—where possible—
-        forwarded to the client as ERROR messages so the peer doesn't hang.
-        """
         self._sock.settimeout(self._config.client_socket_timeout)
         with self._sock:
             try:
@@ -63,7 +63,7 @@ class ClientSession:
                 except Exception:
                     pass
 
-    # ── Internal ──────────────────────────────────────────────────────────────
+
 
     def _handle(self) -> None:
         header, payload = receive_message(self._sock)
@@ -103,7 +103,7 @@ class ClientSession:
             },
         )
 
-        # First pass: all chunks, errors simulated.
+
         self._send_batch(chunks, simulate_errors=True)
 
         chunk_map: dict[int, Chunk] = {c.seq: c for c in chunks}
@@ -122,14 +122,14 @@ class ClientSession:
 
             seqs = [int(s) for s in request.get("seqs", [])]
             resend = [chunk_map[s] for s in seqs if s in chunk_map]
-            # Retransmissions are always clean — no drops or corruption.
+
             self._send_batch(resend, simulate_errors=False)
 
     def _send_batch(self, chunks: list[Chunk], *, simulate_errors: bool) -> None:
-        """Send *chunks* in shuffled order, then send END_BATCH.
+\
+\
+\
 
-        Shuffling simulates out-of-order delivery over a real network.
-        """
         import random
         ordered = list(chunks)
         random.shuffle(ordered)

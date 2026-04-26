@@ -1,5 +1,3 @@
-"""TCP server with per-client thread dispatch."""
-
 from __future__ import annotations
 
 import socket
@@ -10,12 +8,12 @@ from server.session import ClientSession
 
 
 class FileTransferServer:
-    """Multi-client TCP server.
+\
+\
+\
+\
+\
 
-    Each accepted connection is handed to a :class:`~server.session.ClientSession`
-    running in a dedicated daemon thread, so sessions are fully isolated and
-    the main accept loop is never blocked by session work.
-    """
 
     def __init__(self, config: ServerConfig) -> None:
         self.config = config
@@ -24,13 +22,13 @@ class FileTransferServer:
         self.bound_port: int = config.port
 
     def serve_forever(self) -> None:
-        """Accept connections until :meth:`stop` is called."""
+
         self.config.storage_dir.mkdir(parents=True, exist_ok=True)
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as srv:
             srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             srv.bind((self.config.host, self.config.port))
             srv.listen()
-            # Short timeout so the accept loop can check _stop periodically.
+
             srv.settimeout(0.5)
             self._sock = srv
             self.bound_port = srv.getsockname()[1]
@@ -51,7 +49,7 @@ class FileTransferServer:
                 thread.start()
 
     def stop(self) -> None:
-        """Signal the server to stop accepting new connections."""
+
         self._stop.set()
         if self._sock:
             self._sock.close()

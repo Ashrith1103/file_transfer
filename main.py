@@ -1,15 +1,15 @@
-"""Entry point — run the server or a test client from the command line.
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
 
-Usage
------
-Start the server:
-
-    python main.py server [--host HOST] [--port PORT] [--drop-rate R] [--corrupt-rate R]
-
-Transfer a file:
-
-    python main.py client FILE [--host HOST] [--port PORT] [--output-dir DIR]
-"""
 
 from __future__ import annotations
 
@@ -65,7 +65,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="BigEndian file transfer system")
     sub = parser.add_subparsers(dest="command", required=True)
 
-    # ── server ────────────────────────────────────────────────────────────────
+
     sp = sub.add_parser("server", help="Start the TCP server")
     sp.add_argument("--host", default=SERVER_HOST)
     sp.add_argument("--port", type=int, default=SERVER_PORT)
@@ -77,7 +77,7 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--storage-dir", type=Path, default=Path("server_storage"))
     sp.set_defaults(func=_server_cmd)
 
-    # ── client ────────────────────────────────────────────────────────────────
+
     cp = sub.add_parser("client", help="Upload and verify a file")
     cp.add_argument("file", type=Path, help="Path to the file to transfer")
     cp.add_argument("--host", default=SERVER_HOST)
