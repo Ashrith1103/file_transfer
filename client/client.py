@@ -19,6 +19,9 @@ from core import (
 )
 
 
+RETRANSMIT_BATCH_SIZE = 1000
+
+
 class FileTransferClient:
     """Connect to a :class:`~server.server.FileTransferServer` and transfer a file.
 
@@ -99,8 +102,7 @@ class FileTransferClient:
                     break
                 if attempt > self.max_retries:
                     raise RetransmitLimitError(self.max_retries, len(missing))
-                send_message(sock, {"type": "RETRANSMIT", "seqs": missing})
-                missing = self._receive_batch(sock, client_id, total_chunks, received)
+                missing = self._request_retransmits(sock, client_id, total_chunks, received, missing)
 
             if missing:
                 raise RetransmitLimitError(self.max_retries, len(missing))
@@ -154,3 +156,18 @@ class FileTransferClient:
             else:
                 # Corrupted chunk — discard and let it be retransmitted.
                 received.pop(seq, None)
+
+    def _request_retransmits(
+        self,
+        sock: socket.socket,
+        client_id: str,
+        total_chunks: int,
+        received: dict[int, bytes],
+        missing: list[int],
+    ) -> list[int]:
+        """Request missing chunks in bounded batches."""
+        for start in range(0, len(missing), RETRANSMIT_BATCH_SIZE):
+            batch = missing[start : start + RETRANSMIT_BATCH_SIZE]
+            send_message(sock, {"type": "RETRANSMIT", "seqs": batch})
+            self._receive_batch(sock, client_id, total_chunks, received)
+        return sorted(seq for seq in range(total_chunks) if seq not in received)
