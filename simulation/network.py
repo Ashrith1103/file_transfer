@@ -1,25 +1,9 @@
-\
-\
-\
-\
-\
-\
-
-
 from __future__ import annotations
 
 import random
 
 
 class NetworkSimulator:
-\
-\
-\
-\
-\
-\
-\
-\
 
 
     def __init__(self, drop_rate: float = 0.0, corrupt_rate: float = 0.0) -> None:
@@ -35,10 +19,6 @@ class NetworkSimulator:
         return self.drop_rate > 0.0 and random.random() < self.drop_rate
 
     def corrupt(self, data: bytes) -> bytes:
-\
-\
-\
-\
 
         if data and self.corrupt_rate > 0.0 and random.random() < self.corrupt_rate:
             return bytes([data[0] ^ 0xFF]) + data[1:]

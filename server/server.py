@@ -8,11 +8,6 @@ from server.session import ClientSession
 
 
 class FileTransferServer:
-\
-\
-\
-\
-\
 
 
     def __init__(self, config: ServerConfig) -> None:

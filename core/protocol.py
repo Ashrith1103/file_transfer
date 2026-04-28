@@ -1,26 +1,3 @@
-\
-\
-\
-\
-\
-\
-\
-\
-\
-\
-\
-\
-\
-\
-\
-\
-\
-\
-\
-\
-\
-
-
 from __future__ import annotations
 
 import json
@@ -52,10 +29,6 @@ class Chunk:
 
 
 def send_message(sock: socket, header: dict[str, Any], payload: bytes = b"") -> None:
-\
-\
-\
-\
 
     header = dict(header)
     header["payload_length"] = len(payload)
@@ -69,10 +42,6 @@ def send_message(sock: socket, header: dict[str, Any], payload: bytes = b"") -> 
 
 
 def receive_message(sock: socket) -> tuple[dict[str, Any], bytes]:
-\
-\
-\
-\
 
     raw = _read_exact(sock, LENGTH_PREFIX_SIZE)
     header_size = struct.unpack("!I", raw)[0]
@@ -104,16 +73,6 @@ def _read_exact(sock: socket, size: int) -> bytes:
 
 
 def split_bytes(data: bytes, chunk_size: int = CHUNK_SIZE) -> list[Chunk]:
-\
-\
-\
-\
-\
-\
-\
-\
-\
-\
 
     if chunk_size <= 0:
         raise ValueError(f"chunk_size must be positive, got {chunk_size}")
@@ -131,11 +90,6 @@ def _slice(data: bytes, chunk_size: int) -> list[bytes]:
 
 
 def atomic_write(path: Path, data: bytes) -> None:
-\
-\
-\
-\
-\
 
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_name(f".{path.name}.{os.getpid()}.tmp")
